@@ -1,11 +1,14 @@
 import mysql.connector
+import json
 
+with open('secret/credentials.json') as json_file:
+    data = json.load(json_file)
 
 # Connect to MySQL
 mydb = mysql.connector.connect(
     host = "localhost",
-    user = "",
-    password = "",
+    user = data["MySQL_credentials"]['user'],
+    password = data["MySQL_credentials"]['password'],
     database = 'testdb'
 )
 
@@ -61,6 +64,8 @@ def get_user_db(id):
         print("Password  = ", column[3])
         print("Email  = ", column[4]) # UNIQUE
 
+
+get_user_db(1)
 
 def get_buy_tx_db(id):
     get_buy_tx = "SELECT * FROM buy_tx WHERE id = {0}".format(id)
