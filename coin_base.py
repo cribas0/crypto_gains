@@ -1,9 +1,13 @@
 from coinbase.wallet.client import Client
+import json
+
+with open('secret/credentials.json') as json_file:
+  data = json.load(json_file)
 
 
 # BASIC configuration of COINBASE with API_KEY & SECRET
-api_key = ''
-api_secret = ''
+api_key = data["Coin_Base_credentials"]["api_key"]
+api_secret = data["Coin_Base_credentials"]["api_secret"]
 client = Client(api_key, api_secret)
 
 
