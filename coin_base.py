@@ -2,8 +2,8 @@ from coinbase.wallet.client import Client
 
 
 # BASIC configuration of COINBASE with API_KEY & SECRET
-api_key = 'IAzb78LdujWFdTEx'
-api_secret = 'WcA0W104V2NNZUBBNdgrPNsET9GdVhjT'
+api_key = ''
+api_secret = ''
 client = Client(api_key, api_secret)
 
 
