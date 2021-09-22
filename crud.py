@@ -41,8 +41,6 @@ def add_user_balance_db(userid, amount, currency):
 
 #add_transaction_db(2, "2021-09-16 03:07:00", "USD", "BTC", 1000, 200, 0, 10, 80,True)
 #add_user_db("Jang","Minho", "jijiji", "minho1693@gmail.com")
-#add_buy_tx_db(3, "2021-09-16 03:07:00", "USD", "BTC", 1000, 200, 0, 10, 80)
-#add_sell_tx_db(3, "2021-09-16 03:07:00", "BTC", "USD", 200, 1000, 10, 0, 80)
 #add_user_balance_db(1,80,"BTC")
 
 ## READ USER/TRANSACTION FUNCTION BY ID
@@ -59,7 +57,6 @@ def get_user_db(id):
         print("FirstName  = ", column[2])
         print("Password  = ", column[3])
         print("Email  = ", column[4]) # UNIQUE
-
 
 #get_user_db(1)
 
@@ -82,9 +79,6 @@ def get_transaction_db(id):
         print("Money Coin Rate (EUR/EA)  = ", column[9])
         print("Purchasing action TRUE or NOT  = ", column[10])
 
-
-#get_transaction_db(1)
-
 def get_user_balance_db(id):
     get_user_balance = "SELECT * FROM user_balance WHERE userid = {0}".format(id)
     my_cursor.execute(get_user_balance)
@@ -96,8 +90,7 @@ def get_user_balance_db(id):
         print("Amount (EUR) = ", column[1])
         print("Currency  = ", column[2])
 
-#get_buy_tx_db(1)
-#get_sell_tx_db(1)
+#get_transaction_db(1)
 #get_user_balance_db(1)
 
 ## EDIT USER/TRANSACTION FUNCTION BY ID, COLUMN_NAME AND ITEM
