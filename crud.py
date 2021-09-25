@@ -1,5 +1,14 @@
 import mysql.connector
 import json
+from pydantic_models import (
+    UserSignUp, AddTransaction,
+)
+from datetime import datetime
+from coin_base import get_buy_price, get_sell_price
+
+now = datetime.now()
+date_time = now.strftime("%Y-%m-%d %H:%M:%S")
+print(date_time)
 
 with open('secret/credentials.json') as json_file:
     data = json.load(json_file)
@@ -20,17 +29,26 @@ my_cursor = mydb.cursor()
 
 ## ADD USER/TRANSACTION FUNCTION
 
-def add_user_db(lastname, firstname, password, email):
+def add_user_db(UserSignUp: UserSignUp) -> None:
     add_user = "INSERT INTO users (lastname, firstname, password, email) VALUES (%s, %s, %s, %s)"
-    user_info = (lastname, firstname, password, email)
+    user_info = (UserSignUp.lastname, UserSignUp.firstname, UserSignUp.password, UserSignUp.email)
     my_cursor.execute(add_user, user_info)
     mydb.commit()
 
-def add_transaction_db(userid, trade_time, money_currency, coin_currency, initial_money_amount, final_money_amount, initial_coin_amount, final_coin_amount, money_coin_rate, buy_boolean):
-    add_transaction = "INSERT INTO transaction (userid, trade_time, money_currency, coin_currency, initial_money_amount, final_money_amount, initial_coin_amount, final_coin_amount, money_coin_rate, buy_boolean) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    transaction_info = (userid, trade_time, money_currency, coin_currency, initial_money_amount, final_money_amount, initial_coin_amount, final_coin_amount, money_coin_rate, buy_boolean)
+
+# add_transaction_with pydantic
+def add_transaction_db(AddTransaction: AddTransaction) -> None:
+    add_transaction = "INSERT INTO transaction (userid, trade_time, money_currency, coin_currency, initial_money_amount, final_money_amount, initial_coin_amount, final_coin_amount, money_coin_rate, IsBuy) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    
+    if AddTransaction.IsBuy == True:
+        money_coin_rate = get_buy_price(AddTransaction.coin_currency,AddTransaction.money_currency)
+    else: 
+        money_coin_rate = get_sell_price(AddTransaction.coin_currency,AddTransaction.money_currency)
+
+    transaction_info = (AddTransaction.userid, date_time, AddTransaction.money_currency, AddTransaction.coin_currency, AddTransaction.initial_money_amount, AddTransaction.final_money_amount, AddTransaction.initial_coin_amount, AddTransaction.final_coin_amount, money_coin_rate, AddTransaction.IsBuy)
     my_cursor.execute(add_transaction, transaction_info)
     mydb.commit()
+
 
 
 def add_user_balance_db(userid, amount, currency):
@@ -39,7 +57,7 @@ def add_user_balance_db(userid, amount, currency):
     my_cursor.execute(add_user_balance, user_balance_info)
     mydb.commit()
 
-#add_transaction_db(2, "2021-09-16 03:07:00", "USD", "BTC", 1000, 200, 0, 10, 80,True)
+#add_transaction_db(3, "2021-09-16 03:07:00", "USD", "BTC", 1000, 200, 0, 10, 80,True)
 #add_user_db("Jang","Minho", "jijiji", "minho1693@gmail.com")
 #add_user_balance_db(1,80,"BTC")
 
@@ -70,14 +88,14 @@ def get_transaction_db(id):
         print("ID = ", column[0])
         print("UserID = ", column[1])
         print("Trade Time  = ", column[2])
-        print("Money Currency  = ", column[3])
-        print("Coin Currency  = ", column[4])
+        print("Initial Currency  = ", column[3])
+        print("Final Currency  = ", column[4])
         print("Initial Balance (EUR)  = ", column[5])
         print("Final Balance (EUR)  = ", column[6])
         print("Initial Coin amount (EA)  = ", column[7])
         print("Final Coin amount (EA)  = ", column[8])        
         print("Money Coin Rate (EUR/EA)  = ", column[9])
-        print("Purchasing action TRUE or NOT  = ", column[10])
+        print("Purchasing action TRUE(1) or NOT(0)  = ", column[10])
 
 def get_user_balance_db(id):
     get_user_balance = "SELECT * FROM user_balance WHERE userid = {0}".format(id)

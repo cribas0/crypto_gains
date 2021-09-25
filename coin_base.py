@@ -25,12 +25,14 @@ def get_buy_price(Coin_currency, Base_currency):
   buy_price = client.get_buy_price(currency_pair = str(Coin_currency) + "-" + str(Base_currency))
   buy_price_amount = buy_price.get("amount")
   print("The buy price is: " + buy_price_amount + " {0}/{1} .".format(Base_currency,Coin_currency))
-
+  return buy_price_amount
+  
 def get_sell_price(Coin_currency, Base_currency):  
   sell_price = client.get_sell_price(currency_pair = str(Coin_currency) + "-" + str(Base_currency))
   sell_price_amount = sell_price.get("amount")
   print("The sell price is: " + sell_price_amount + " {0}/{1} .".format(Base_currency,Coin_currency))
-
+  return sell_price_amount
+  
 
 get_buy_price("BTC","USD")
 get_sell_price("BTC","USD")
