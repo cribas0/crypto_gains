@@ -12,10 +12,8 @@ class AddTransaction(BaseModel):
     userid: int    
     money_currency: str
     coin_currency: str
-    initial_money_amount: float 
-    final_money_amount: float
-    initial_coin_amount: float
-    final_coin_amount: float    
+    traded_money_amount: float 
+    traded_coin_amount: float
     IsBuy: bool
 
 # para dar respuesta una vez ejecutado el POST
