@@ -1,17 +1,11 @@
 from fastapi import FastAPI, Path, HTTPException, status
-from crud import (add_user_db,add_transaction_db)
+from crud import (add_user_db,add_transaction_db,get_user_db,get_user_balance_db,delete_user_db)
 from pydantic_models import (
     UserSignUp, AddTransaction,
     StandardResponse,
 )
 
 app = FastAPI()
-
-
-@app.get("/")
-def index():
-    return {"name" : "First Data"}
-
 
 @app.post("/sign_up")
 def SignUpUser(RequestBody: UserSignUp): 
@@ -36,10 +30,27 @@ def addTransaction(RequestBody: AddTransaction):
 #        return ("Error")
 #    return StandardResponse(code = "Success", message = "User created successfully")
 
+@app.get("/get_user_by_id/{user_id}")
+def GetUserInfo(user_id: int):
+    return(get_user_db(user_id))
 
-""" 
+@app.get("/get_user_balance_by_id/{user_id}")
+def GetUserBalanceInfo(user_id: int):
+    return(get_user_balance_db(user_id))
 
-@app.get("/get-student/{student_id}") 
+
+@app.delete("/delete_user_by_id/{user_id}")
+def DeleteUserInfo(user_id: int):
+    try:
+        delete_user_db(user_id)
+    except:
+        raise HTTPException (
+            status_code = status.HTTP_409_CONFLICT,
+            detail = ("This User ID does not exist")
+        )
+    return StandardResponse(code = "Success", message = "User deleted successfully")
+
+""" @app.get("/get-student/{student_id}") 
 def get_student(student_id: int = Path(None, description="The ID of the student you want to see", gt=0, lt=3)): 
      return students[student_id]
 
@@ -49,7 +60,7 @@ def get_student(*, student_id: int, name: Optional[str] = None, test: int):
        if students[student_id]["name"] == name:
            return students[student_id]
        else: 
-           return {"Data": "Not found"}  """
+           return {"Data": "Not found"}   """
 
 """ @app.post("/create-student/{student_id}")
 def create_student(student_id: int, student : Student):
