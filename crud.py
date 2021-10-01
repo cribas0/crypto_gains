@@ -59,10 +59,13 @@ def add_transaction_db(AddTransaction: AddTransaction) -> None:
     mydb.commit()
 
 def add_user_balance_db(userid, amount, currency):
-    add_user_balance = "INSERT INTO user_balance (userid, amount, currency) VALUES (%s, %s, %s)"
-    user_balance_info = (userid, amount, currency)
+    add_user_balance = "INSERT INTO user_balance (userid, amount, currency) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE userid = %s, amount = amount + %s, currency = %s"
+    user_balance_info = (userid, amount, currency,userid, amount, currency)
     my_cursor.execute(add_user_balance, user_balance_info)
     mydb.commit()
+
+
+#add_user_balance_db(1,5000,"KRW")
 
 #add_transaction_db(3, "2021-09-16 03:07:00", "USD", "BTC", 1000, 200, 0, 10, 80,True)
 #add_user_db("Jang","Minho", "jijiji", "minho1693@gmail.com")
@@ -121,7 +124,7 @@ def get_user_balance_byCurrency_db(id,currency):
     for x in get_user_balance_info:
         return x[1]
 
-get_user_balance_byCurrency_db(1,"ETH")
+#get_user_balance_byCurrency_db(1,"ETH")
 
 ## EDIT USER/TRANSACTION FUNCTION BY ID, COLUMN_NAME AND ITEM
 
