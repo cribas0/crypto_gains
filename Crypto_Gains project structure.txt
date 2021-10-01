@@ -1,0 +1,33 @@
+Crypto_Gains Structure 
+0.0 START PAGE
+	1. LOG-IN
+		1.0 USER PAGE
+			1.1. CREDIT CHARGE
+			1.2. USER BALANCE CHECK (IT CAN BE DONE IN THE SAME USER PAGE)
+			1.3. DELETE USER
+			1.4. BUY/SELL COIN
+				1.4.0. TRADE PAGE
+					1.4.1. CHECK BUY/SELL PRICE
+					1.4.2. TRADE (TRANSACTION -> BUY/SELL)
+	2. FORGOT PASSWORD? 
+	3. REGISTRATION
+ -----------------------------------------------------------------------------------------------------
+
+Required functions by each page (make the endpoints with API)
+	1. LOG-IN: OAuth // (STAND-BY)
+		1.0. USER PAGE: Get_user_by_id // (DONE)
+		1.1. CREDIT CHARGE: Add_user_balance_db [first] // (DONE) *if the currency already exists -> sum the amount 
+		1.2. USER BALANCE CHECK: get_user_balance_by_id // (DONE)
+		1.3. DELETE USER: delete_user_by_id // (DONE)
+		1.4. BUY/SELL COIN
+			1.4.0. TRADE PAGE 
+				1.4.1. CHECK BUY/SELL PRICE: get buy/sell price (DONE)
+				1.4.2. TRADE: add_transaction // (**pending**)
+	2. FORGOT PASSWORD?: // (STAND-BY), SMTP
+	3. REGISTRATION:	SignUpUser // (DONE)
+
+-------------------------------------------------------------------------------------------------------
+Details to improve the quality: 
+- HTTP response -> more details of the errors
+- Reduce the unused functions
+- Avoid transaction if the balance (charged amount) is below the requested trade-amount
