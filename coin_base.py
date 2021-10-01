@@ -34,8 +34,8 @@ def get_sell_price(Coin_currency, Base_currency):
   return sell_price_amount
   
 
-get_buy_price("BTC","USD")
-get_sell_price("BTC","USD")
+#get_buy_price("SOL","GBP")
+#get_sell_price("BTC","USD")
 
 # Get SELL PRICE API
 #price = client.get_sell_price(currency_pair = 'BTC-USD')
