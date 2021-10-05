@@ -16,6 +16,12 @@ class AddTransaction(BaseModel):
     traded_coin_amount: float
     IsBuy: bool
 
+class UserMoneyCharge(BaseModel):
+    userid: int
+    amount: float
+    currency: str
+
+
 # para dar respuesta una vez ejecutado el POST
 class StandardResponse(BaseModel):
     code: str 
