@@ -34,7 +34,7 @@ def get_sell_price(Coin_currency, Base_currency):
   return sell_price_amount
   
 
-#get_buy_price("SOL","GBP")
+#get_buy_price("DOGE","CNY")
 #get_sell_price("BTC","USD")
 
 # Get SELL PRICE API
