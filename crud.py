@@ -22,7 +22,8 @@ mydb = mysql.connector.connect(
 my_cursor = mydb.cursor()
 
 # How to create a database in MySQL
-#my_cursor.execute("CREATE DATABASE testdb") <- no need to repeat once it is already created -> once created, put the database name inside "mydb"
+# my_cursor.execute("CREATE DATABASE testdb") <- no need to repeat once it is already created 
+# -> once created, put the database name inside "mydb"
 
 
 ## ADD USER/TRANSACTION FUNCTION
@@ -44,19 +45,21 @@ def add_transaction_db(AddTransaction: AddTransaction) -> None:
     if AddTransaction.IsBuy == True:
         money_coin_rate = float(get_buy_price(AddTransaction.coin_currency,AddTransaction.money_currency))
         final_money_amount = initial_money_amount - AddTransaction.traded_money_amount
-        #if final_money_amount < 0:
-        #    print("You cannot purchase over your balance")
-        #    exit()
-        #else:
-        final_coin_amount = initial_coin_amount + AddTransaction.traded_money_amount/money_coin_rate
-        update_user_balance_db("amount",final_money_amount,AddTransaction.userid,AddTransaction.money_currency)
-        update_user_balance_db("amount",final_coin_amount,AddTransaction.userid,AddTransaction.coin_currency)
+        if final_money_amount < 0:
+            exit()
+        else:
+            final_coin_amount = initial_coin_amount + AddTransaction.traded_money_amount/money_coin_rate
+            update_user_balance_db("amount",final_money_amount,AddTransaction.userid,AddTransaction.money_currency)
+            update_user_balance_db("amount",final_coin_amount,AddTransaction.userid,AddTransaction.coin_currency)
     else: 
         money_coin_rate = float(get_sell_price(AddTransaction.coin_currency,AddTransaction.money_currency))
         final_coin_amount = initial_coin_amount - AddTransaction.traded_coin_amount
-        final_money_amount = initial_money_amount + AddTransaction.traded_coin_amount*money_coin_rate
-        update_user_balance_db("amount",final_money_amount,AddTransaction.userid,AddTransaction.money_currency)
-        update_user_balance_db("amount",final_coin_amount,AddTransaction.userid,AddTransaction.coin_currency)
+        if final_coin_amount < 0:
+            exit()        
+        else:
+            final_money_amount = initial_money_amount + AddTransaction.traded_coin_amount*money_coin_rate
+            update_user_balance_db("amount",final_money_amount,AddTransaction.userid,AddTransaction.money_currency)
+            update_user_balance_db("amount",final_coin_amount,AddTransaction.userid,AddTransaction.coin_currency)
 
     transaction_info = (AddTransaction.userid, date_time, AddTransaction.money_currency, AddTransaction.coin_currency, initial_money_amount, final_money_amount, initial_coin_amount, final_coin_amount, money_coin_rate, AddTransaction.IsBuy)
     my_cursor.execute(add_transaction, transaction_info)
@@ -87,24 +90,10 @@ def get_user_db(id):
 #get_user_db(1)
 
 def get_transaction_db(id):
-    get_transaction = "SELECT * FROM transaction WHERE id = {0}".format(id)
+    get_transaction = "SELECT * FROM transaction WHERE userid = {0}".format(id)
     my_cursor.execute(get_transaction)
     get_transaction_info = my_cursor.fetchall()
     return get_transaction_info
-
-    print("\nPrinting each column of the id {0}".format(id))
-    for column in get_transaction_info:
-        print("ID = ", column[0])
-        print("UserID = ", column[1])
-        print("Trade Time  = ", column[2])
-        print("Initial Currency  = ", column[3])
-        print("Final Currency  = ", column[4])
-        print("Initial Balance (EUR)  = ", column[5])
-        print("Final Balance (EUR)  = ", column[6])
-        print("Initial Coin amount (EA)  = ", column[7])
-        print("Final Coin amount (EA)  = ", column[8])        
-        print("Money Coin Rate (EUR/EA)  = ", column[9])
-        print("Purchasing action TRUE(1) or NOT(0)  = ", column[10])
 
 #get_transaction_db(1)
 
@@ -115,8 +104,6 @@ def get_user_balance_db(id):
     return get_user_balance_info
 
 #get_user_balance_db(1)
-
-
 
 def get_user_balance_byCurrency_db(id,curr):
     get_user_balance_byCurrency = 'SELECT * FROM user_balance WHERE userid = {0} AND currency = "{1}"'.format(id,curr)
